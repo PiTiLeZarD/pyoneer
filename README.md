@@ -8,7 +8,5 @@ Steps are connected to branches. To see the working code at step X:
 $ git checkout step_X
 ```
 
- - [Step 1](https://github.com/PiTiLeZarD/pyoneer/tree/step_1): Have a little guy walking on a 3x4 map, nothing fancy
-   - ![](https://raw.githubusercontent.com/PiTiLeZarD/pyoneer/step_1/example.png | width=100)
- - [Step 2](https://github.com/PiTiLeZarD/pyoneer/tree/step_2): Here the cells in the map have walls, objects and you can win the game
-   - ![](https://raw.githubusercontent.com/PiTiLeZarD/pyoneer/step_2/example.png =200x)
+ - [Step 1](https://github.com/PiTiLeZarD/pyoneer/tree/step_1): Have a little guy walking on a 3x4 map, nothing fancy ([Example](https://raw.githubusercontent.com/PiTiLeZarD/pyoneer/step_1/example.png))
+ - [Step 2](https://github.com/PiTiLeZarD/pyoneer/tree/step_2): Here the cells in the map have walls, objects and you can win the game ([Example](https://raw.githubusercontent.com/PiTiLeZarD/pyoneer/step_2/example.png))
