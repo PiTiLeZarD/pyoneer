@@ -1,19 +1,21 @@
-"""
-Direction in the cells matrix is assumed as follow:
+import random
+from cell import Cell
 
-          north
-            |
-      west -X- east
-            |
-          south
-
-"""
-AVAILABLE_DIRECTIONS = ('north', 'south', 'east', 'west')
-
-EMPTY = 0
-PLAYER = 1
+class Win(Exception):
+    pass
 
 class GameMap(object):
+    """
+    Direction in the cells matrix is assumed as follow:
+
+              north
+                |
+          west -X- east
+                |
+              south
+
+    """
+    AVAILABLE_DIRECTIONS = ('north', 'south', 'east', 'west')
 
     def __init__(self, width, height, player_position=None):
         """
@@ -27,13 +29,39 @@ class GameMap(object):
         Keep in mind: the first level is the height:
         cells[height][width] = cell
         """
-        self.cells = [[EMPTY for h in range(width)] for w in range(height)]
+        self.cells = [
+            [
+                Cell(walls={
+                    "north": h == 0,
+                    "south": h == height - 1,
+                    "west": w == 0,
+                    "east": w == width - 1
+                })
+                for w in range(width)
+            ] for h in range(height)
+        ]
+
+        self.poke_a_hole()
 
         if player_position is not None:
-            self.set_cell(player_position, PLAYER)
+            self.get_cell(player_position).add(Cell.PLAYER)
 
-    def set_cell(self, position, value):
-        self.cells[position[1]][position[0]] = value
+    def poke_a_hole(self):
+        # listing all the cells with walls
+        cells_with_a_wall = [ c for row in self.cells for c in row if True in c.walls.values() ]
+
+        # pick one randomly
+        cell_to_poke = cells_with_a_wall[random.randint(0, len(cells_with_a_wall) - 1)]
+
+        # listing all the walls in the cell
+        walls = [ direction for direction in self.AVAILABLE_DIRECTIONS if not cell_to_poke.can_go(direction) ]
+
+        # pick one randomly
+        direction = walls[random.randint(0, len(walls) - 1)]
+        # print(['cheat for demo', walls, direction])
+
+        # POKE!
+        cell_to_poke.walls[direction] = False
 
     def get_cell(self, position):
         return self.cells[position[1]][position[0]]
@@ -47,8 +75,8 @@ class GameMap(object):
     def get_positions_of(self, value):
         positions = []
         for h, row in enumerate(self.cells):
-            for w, v in enumerate(row):
-                if v == value:
+            for w, cell in enumerate(row):
+                if cell.has(value):
                     positions.append([w, h])
         return positions
 
@@ -57,8 +85,11 @@ class GameMap(object):
 
     def move(self, value, direction):
         old_position = self.get_position_of(value)
-        if self.get_cell(old_position) == EMPTY:
+        if not self.get_cell(old_position).has(value):
             raise ValueError("Cannot move void")
+
+        if not self.get_cell(old_position).can_go(direction):
+            raise ValueError("You just hit a wall!")
 
         new_position = old_position.copy()
 
@@ -74,7 +105,7 @@ class GameMap(object):
             raise ValueError("Direction {direction} is not allowed".format(direction=direction))
 
         if not self.is_inside(new_position):
-            raise ValueError("You cannot go outside the map")
+            raise Win("Congrats!")
 
-        self.set_cell(old_position, EMPTY)
-        self.set_cell(new_position, value)
+        self.get_cell(old_position).remove(value)
+        self.get_cell(new_position).add(value)
