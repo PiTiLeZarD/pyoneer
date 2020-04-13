@@ -10,4 +10,4 @@ The game will tell you what you see, walls and objects.
 
 Bonus just for fun, get one random wall down, and you win the game if you can get outside the map!
 
-![example](https://raw.githubusercontent.com/PiTiLeZarD/pyoneer/step_1/example.png)
+![example](https://raw.githubusercontent.com/PiTiLeZarD/pyoneer/step_2/example.png)
