@@ -27,7 +27,7 @@ class GameMap(object):
         Keep in mind: the first level is the height:
         cells[height][width] = cell
         """
-        self.cells = [[EMPTY for h in range(width)] for w in range(height)]
+        self.cells = [[EMPTY for w in range(width)] for h in range(height)]
 
         if player_position is not None:
             self.set_cell(player_position, PLAYER)
